@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:futebol/components/artilheiros.dart';
+import 'package:futebol/components/tabela.dart';
+import 'package:futebol/components/transferencias.dart';
 
 class Campeonato extends StatefulWidget {
   Campeonato({Key key, this.id, this.nome}) : super(key: key);
@@ -13,35 +16,29 @@ class Campeonato extends StatefulWidget {
 /// This is the private State class that goes with MyStatefulWidget.
 class _CampeonatoState extends State<Campeonato> {
   int _selectedIndex = 0;
+  List<StatelessWidget> _listArea;
 
-  static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Center(
-      child: Text(
-        'Tabela',
-        style: optionStyle,
+  @override
+  void initState() {
+    _listArea = <StatelessWidget>[
+      Tabela(
+        id: widget.id,
       ),
-    ),
-    Center(
-      child: Text(
-        'Artilheiros',
-        style: optionStyle,
+      Artilheiros(
+        id: widget.id,
       ),
-    ),
-    Center(
-      child: Text(
-        'Transferências',
-        style: optionStyle,
+      Transferencias(
+        id: widget.id,
       ),
-    ),
-  ];
+    ];
 
-  List<StatelessWidget> _listArea = <StatelessWidget>[
-    Tabela(),
-    Artilheiros(),
-    Transferencias(),
-  ];
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -56,7 +53,7 @@ class _CampeonatoState extends State<Campeonato> {
         title: Text(widget.nome),
       ),
       body: Container(
-        child: _listArea.elementAt(_selectedIndex),
+        child: _listArea[_selectedIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -66,7 +63,7 @@ class _CampeonatoState extends State<Campeonato> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Artilhieros',
+            label: 'Artilheiros',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.compare_arrows_rounded),
@@ -77,136 +74,6 @@ class _CampeonatoState extends State<Campeonato> {
         selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
       ),
-    );
-  }
-}
-
-class Tabela extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-    return DataTable(
-      columns: const <DataColumn>[
-        DataColumn(
-          label: Text(
-            'Time',
-            style: TextStyle(fontStyle: FontStyle.italic),
-          ),
-        ),
-        DataColumn(
-          label: Text(
-            'Pontos',
-            style: TextStyle(fontStyle: FontStyle.italic),
-          ),
-        ),
-        DataColumn(
-          label: Text(
-            'Jogos',
-            style: TextStyle(fontStyle: FontStyle.italic),
-          ),
-        ),
-      ],
-      rows: const <DataRow>[
-        DataRow(
-          cells: <DataCell>[
-            DataCell(Text('Flamengo')),
-            DataCell(Text('19')),
-            DataCell(Text('21')),
-          ],
-        ),
-        DataRow(
-          cells: <DataCell>[
-            DataCell(Text('Vasco')),
-            DataCell(Text('19')),
-            DataCell(Text('21')),
-          ],
-        ),
-        DataRow(
-          cells: <DataCell>[
-            DataCell(Text('Botafogo')),
-            DataCell(Text('19')),
-            DataCell(Text('21')),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class Artilheiros extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-    return DataTable(
-      columns: const <DataColumn>[
-        DataColumn(
-          label: Text(
-            'Jogador',
-            style: TextStyle(fontStyle: FontStyle.italic),
-          ),
-        ),
-        DataColumn(
-          label: Text(
-            'Clube',
-            style: TextStyle(fontStyle: FontStyle.italic),
-          ),
-        ),
-        DataColumn(
-          label: Text(
-            'Gols',
-            style: TextStyle(fontStyle: FontStyle.italic),
-          ),
-        ),
-      ],
-      rows: const <DataRow>[
-        DataRow(
-          cells: <DataCell>[
-            DataCell(Text('Gabigol')),
-            DataCell(Text('Flamengo')),
-            DataCell(Text('21')),
-          ],
-        ),
-        DataRow(
-          cells: <DataCell>[
-            DataCell(Text('Pedro')),
-            DataCell(Text('Flamengo')),
-            DataCell(Text('21')),
-          ],
-        ),
-        DataRow(
-          cells: <DataCell>[
-            DataCell(Text('German Cano')),
-            DataCell(Text('Vasco')),
-            DataCell(Text('18')),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class Transferencias extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        ListTile(
-          leading: Icon(Icons.person),
-          title: Text('Thiago Maia'),
-          subtitle: Text('Lille -> Flamengo'),
-        ),
-        ListTile(
-          leading: Icon(Icons.person),
-          title: Text('Pedro'),
-          subtitle: Text('Fiorentina -> Flamengo'),
-        ),
-        ListTile(
-          leading: Icon(Icons.person),
-          title: Text('Fred'),
-          subtitle: Text('Cruzeiro -> Fluminense'),
-        ),
-      ],
     );
   }
 }

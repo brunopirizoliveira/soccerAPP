@@ -7,7 +7,6 @@ import 'dart:convert';
 import 'package:futebol/components/progress.dart';
 import 'package:futebol/components/centered_message.dart';
 import 'package:futebol/components/card_campeonato.dart';
-import 'package:futebol/screens/campeonato.dart';
 
 class Secoes extends StatelessWidget {
   @override
