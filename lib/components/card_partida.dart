@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:futebol/screens/campeonato.dart';
 import 'package:futebol/models/partidas.dart';
 
 class CardPartida extends StatelessWidget {
-
   final Partida _partida;
 
   CardPartida(this._partida);
@@ -17,6 +15,5 @@ class CardPartida extends StatelessWidget {
         subtitle: Text(_partida.estadio.nome),
       ),
     );
-
   }
 }
