@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:futebol/models/partidas.dart';
+import 'package:futebol/models/estadio.dart';
+import 'package:futebol/models/time.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'package:futebol/components/progress.dart';
+import 'package:futebol/components/centered_message.dart';
 
 class Tabela extends StatelessWidget {
-
   int id;
   int nome;
 
@@ -16,18 +19,42 @@ class Tabela extends StatelessWidget {
       'https://api.api-futebol.com.br/v1/times/1/partidas/proximas',
       headers: {
         HttpHeaders.authorizationHeader:
-        "Bearer test_00b8645af0e536fe3aebbc19a2d332"
+            "Bearer test_00b8645af0e536fe3aebbc19a2d332"
       },
     ).timeout(
       Duration(seconds: 15),
     );
-    debugPrint(response.body);
-    final List<dynamic> decodedJson = jsonDecode(response.body);
+
+    final Map<String, dynamic> decodedJson = jsonDecode(response.body);
+    List<dynamic> partidas = decodedJson['copa-do-brasil'];
+
     final List<Partidas> list = new List();
-    debugPrint(response.body);
-    for (Map<String, dynamic> element in decodedJson) {
+
+    for (Map<String, dynamic> partida in partidas) {
       list.add(
-          Partidas(id: element['campeonato_id'],));
+        Partidas(
+            id: partida['partida_id'],
+            placar: partida['placar'],
+            mandante: new Time(
+              id: partida['time_mandante']['id'],
+              nome: partida['time_mandante']['nome_popular'],
+              escudo: partida['time_mandante']['escudo'],
+            ),
+            visitante: new Time(
+              id: partida['time_visitante']['id'],
+              nome: partida['time_visitante']['nome_popular'],
+              escudo: partida['time_visitante']['escudo'],
+            ),
+            placar_mandante: partida['placar_mandante'],
+            placar_visitante: partida['placar_visitante'],
+            status: partida['status'],
+            data_realizacao: partida['data_realizacao'],
+            hora_realizacao: partida['hora_realizacao'],
+            estadio: new Estadio(
+              id: partida['estadio']['estadio_id'],
+              nome: partida['estadio']['nome_popular'],
+            )),
+      );
     }
 
     return list;
@@ -37,10 +64,33 @@ class Tabela extends StatelessWidget {
   Widget build(BuildContext context) {
     if (id == 2) {
       return FutureBuilder<List<Partidas>>(
-          future: Future.delayed(Duration(seconds: 3)).then((value) =>
-              buscaPartidas()),
-          builder: null
-      );
+          future: Future.delayed(Duration(seconds: 3))
+              .then((value) => buscaPartidas()),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+                break;
+
+              case ConnectionState.waiting:
+                Progress(
+                  message: "Carregando partidas",
+                );
+                break;
+
+              case ConnectionState.active:
+                break;
+
+              case ConnectionState.done:
+                return CenteredMessage(
+                  message: "Nenhuma partida encontrada",
+                  iconData: Icons.warning,
+                );
+                break;
+            }
+            return Progress(
+              message: "Carregando Partidas",
+            );
+          });
     } else {
       return DataTable(
         columns: const <DataColumn>[

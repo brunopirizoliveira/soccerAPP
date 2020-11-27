@@ -31,7 +31,7 @@ class Secoes extends StatelessWidget {
             case ConnectionState.done:
               if (snapshot.hasData) {
                 final List<Campeonatos> CampeonatoList = snapshot.data;
-                debugPrint(CampeonatoList.toString());
+                //debugPrint(CampeonatoList.toString());
                 if (CampeonatoList.isNotEmpty) {
                   return ListView.builder(
                     scrollDirection: Axis.vertical,
@@ -68,7 +68,7 @@ class Secoes extends StatelessWidget {
     ).timeout(
       Duration(seconds: 15),
     );
-    debugPrint(response.body);
+    //debugPrint(response.body);
     final List<dynamic> decodedJson = jsonDecode(response.body);
     final List<Campeonatos> list = new List();
 

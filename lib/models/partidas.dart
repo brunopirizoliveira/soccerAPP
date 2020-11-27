@@ -3,7 +3,6 @@ import 'package:futebol/models/estadio.dart';
 
 class Partidas {
   final int id;
-  final int partida_id;
   final String placar;
   final Time mandante;
   final Time visitante;
@@ -16,7 +15,6 @@ class Partidas {
 
   Partidas({
     this.id,
-    this.partida_id,
     this.placar,
     this.mandante,
     this.visitante,
