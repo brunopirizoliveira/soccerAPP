@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:futebol/components/progress.dart';
 import 'package:futebol/components/centered_message.dart';
+import 'package:futebol/components/card_partida.dart';
 
 class Tabela extends StatelessWidget {
   int id;
@@ -14,7 +15,7 @@ class Tabela extends StatelessWidget {
 
   Tabela({Key key, this.id, this.nome}) : super(key: key);
 
-  Future<List<Partidas>> buscaPartidas() async {
+  Future<List<Partida>> buscaPartidas() async {
     final Response response = await get(
       'https://api.api-futebol.com.br/v1/times/1/partidas/proximas',
       headers: {
@@ -28,32 +29,33 @@ class Tabela extends StatelessWidget {
     final Map<String, dynamic> decodedJson = jsonDecode(response.body);
     List<dynamic> partidas = decodedJson['copa-do-brasil'];
 
-    final List<Partidas> list = new List();
+    final List<Partida> list = new List();
 
     for (Map<String, dynamic> partida in partidas) {
       list.add(
-        Partidas(
-            id: partida['partida_id'],
-            placar: partida['placar'],
-            mandante: new Time(
-              id: partida['time_mandante']['id'],
-              nome: partida['time_mandante']['nome_popular'],
-              escudo: partida['time_mandante']['escudo'],
-            ),
-            visitante: new Time(
-              id: partida['time_visitante']['id'],
-              nome: partida['time_visitante']['nome_popular'],
-              escudo: partida['time_visitante']['escudo'],
-            ),
-            placar_mandante: partida['placar_mandante'],
-            placar_visitante: partida['placar_visitante'],
-            status: partida['status'],
-            data_realizacao: partida['data_realizacao'],
-            hora_realizacao: partida['hora_realizacao'],
-            estadio: new Estadio(
-              id: partida['estadio']['estadio_id'],
-              nome: partida['estadio']['nome_popular'],
-            )),
+        Partida(
+          id: partida['partida_id'],
+          placar: partida['placar'],
+          mandante: new Time(
+            id: partida['time_mandante']['id'],
+            nome: partida['time_mandante']['nome_popular'],
+            escudo: partida['time_mandante']['escudo'],
+          ),
+          visitante: new Time(
+            id: partida['time_visitante']['id'],
+            nome: partida['time_visitante']['nome_popular'],
+            escudo: partida['time_visitante']['escudo'],
+          ),
+          placar_mandante: partida['placar_mandante'],
+          placar_visitante: partida['placar_visitante'],
+          status: partida['status'],
+          data_realizacao: partida['data_realizacao'],
+          hora_realizacao: partida['hora_realizacao'],
+          estadio: new Estadio(
+            id: partida['estadio']['estadio_id'],
+            nome: partida['estadio']['nome_popular'],
+          ),
+        ),
       );
     }
 
@@ -63,7 +65,7 @@ class Tabela extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (id == 2) {
-      return FutureBuilder<List<Partidas>>(
+      return FutureBuilder<List<Partida>>(
           future: Future.delayed(Duration(seconds: 3))
               .then((value) => buscaPartidas()),
           builder: (context, snapshot) {
@@ -81,10 +83,27 @@ class Tabela extends StatelessWidget {
                 break;
 
               case ConnectionState.done:
+                if (snapshot.hasData) {
+                  final List<Partida> PartidaList = snapshot.data;
+                  //debugPrint(CampeonatoList.toString());
+                  if (PartidaList.isNotEmpty) {
+                    return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: PartidaList.length,
+                      itemBuilder: (context, index) {
+                        final Partida partida = PartidaList[index];
+                        return CardPartida(partida);
+                      },
+                    );
+                  }
+                }
+
                 return CenteredMessage(
-                  message: "Nenhuma partida encontrada",
+                  message: "Nenhum campeonato encontrado",
                   iconData: Icons.warning,
                 );
+
                 break;
             }
             return Progress(

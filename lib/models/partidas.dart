@@ -1,7 +1,7 @@
 import 'package:futebol/models/time.dart';
 import 'package:futebol/models/estadio.dart';
 
-class Partidas {
+class Partida {
   final int id;
   final String placar;
   final Time mandante;
@@ -13,7 +13,7 @@ class Partidas {
   final String hora_realizacao;
   final Estadio estadio;
 
-  Partidas({
+  Partida({
     this.id,
     this.placar,
     this.mandante,
