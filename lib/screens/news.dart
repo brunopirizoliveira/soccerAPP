@@ -2,26 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:futebol/components/secoes.dart';
 import 'package:futebol/components/menu_drawer.dart';
 
-class Home extends StatefulWidget {
+class News extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _NewsState createState() => _NewsState();
 }
 
-class _HomeState extends State<Home> {
+class _NewsState extends State<News> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Futebol'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.info),
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => AlertCustom(),
-            ),
-          ),
-        ],
+        title: Text('Seções'),
       ),
       drawer: MenuDrawer(),
       body: ListView(
